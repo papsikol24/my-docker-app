@@ -1,81 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Welcome to Nginx!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Nginx! | Multi-Container App</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
+        
         .container {
-            background: rgba(255,255,255,0.9);
-            color: #333;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
         }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         h1 {
             color: #4CAF50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
-        .status {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 5px;
+        
+        .nginx-logo {
+            background: #009639;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.5em;
         }
-        .healthy {
-            color: green;
-            font-weight: bold;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-        .deploy-info {
-            margin-top: 30px;
-            font-size: 12px;
+        
+        .subtitle {
+            text-align: center;
             color: #666;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+        
+        .status-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .status-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .api-status {
+            font-size: 1.5em;
+            margin: 15px 0;
+        }
+        
+        .healthy {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .checking {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .container-info {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .deploy-info {
+            background: #e8eaf6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 30px;
+            font-size: 0.85em;
+            text-align: center;
+            color: #555;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 Welcome to Nginx!</h1>
-        <p>This multi-container application is running on <strong>Railway</strong> with Docker Compose.</p>
+        <h1>
+            🚀 Welcome to Nginx!
+            <span class="nginx-logo">NGINX</span>
+        </h1>
+        <div class="subtitle">
+            Multi-container application running on Railway
+        </div>
         
-        <div class="status">
-            <p>📡 API Status: <span id="api-status" class="checking">Checking...</span></p>
-            <p>🐳 Container: <span id="container-info">Loading...</span></p>
+        <div class="status-card">
+            <div class="status-title">📡 Backend API Status</div>
+            <div class="api-status">
+                Status: <span id="api-status" class="checking">Checking connection...</span>
+            </div>
+            <div class="container-info" id="container-info">
+                Loading container information...
+            </div>
+            <button onclick="checkAPI()">🔄 Refresh Status</button>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🐳</div>
+                <div>Docker Container</div>
+                <small>Nginx + Flask API</small>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">☁️</div>
+                <div>Deployed on Railway</div>
+                <small>Cloud Platform</small>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔗</div>
+                <div>Multi-Container</div>
+                <small>Services communicate internally</small>
+            </div>
         </div>
         
         <div class="deploy-info">
-            <p>✅ Deployed from GitHub to Railway</p>
-            <p>🔧 Multi-container: Nginx + Flask API</p>
+            <strong>✅ Application Information</strong><br>
+            • Nginx Web Server: Serving static content<br>
+            • Flask API: Running Python backend<br>
+            • Supervisor: Managing both services<br>
+            • Deployed from GitHub to Railway<br>
+            • Real-time API health monitoring
         </div>
     </div>
-
+    
     <script>
         async function checkAPI() {
+            const statusElement = document.getElementById('api-status');
+            const infoElement = document.getElementById('container-info');
+            
+            statusElement.textContent = 'Checking...';
+            statusElement.className = 'checking';
+            
             try {
                 const response = await fetch('/api/health');
                 const data = await response.json();
-                document.getElementById('api-status').innerHTML = '✅ ' + data.status;
-                document.getElementById('api-status').className = 'healthy';
-                document.getElementById('container-info').innerHTML = '🐳 ' + data.container;
+                
+                if (response.ok && data.status === 'healthy') {
+                    statusElement.textContent = '✅ ' + data.status.toUpperCase();
+                    statusElement.className = 'healthy';
+                    infoElement.innerHTML = `
+                        🐳 Container: ${data.container}<br>
+                        🏷️ Version: ${data.version || '1.0.0'}<br>
+                        🖥️ Hostname: ${data.hostname || 'N/A'}<br>
+                        ⏱️ Last check: ${new Date().toLocaleTimeString()}
+                    `;
+                } else {
+                    throw new Error('API returned unhealthy status');
+                }
             } catch (error) {
-                document.getElementById('api-status').innerHTML = '❌ API unreachable';
-                document.getElementById('api-status').className = 'error';
-                document.getElementById('container-info').innerHTML = '⚠️ Connection failed';
+                statusElement.textContent = '❌ API UNREACHABLE';
+                statusElement.className = 'error';
+                infoElement.innerHTML = `
+                    ⚠️ Cannot connect to API service<br>
+                    🔄 Retrying in 5 seconds...<br>
+                    💡 The API should be running on port 5000
+                `;
             }
         }
         
         checkAPI();
-        setInterval(checkAPI, 5000);
+        setInterval(checkAPI, 10000);
     </script>
 </body>
 </html>

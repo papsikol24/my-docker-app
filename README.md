@@ -1,18 +1,29 @@
-# Multi-Container Docker Application
+# 🚀 Multi-Container Docker Application
 
-## Architecture
-- **Nginx**: Web server serving static content
-- **Flask API**: Backend API service
-- **Docker Compose**: Orchestrates both containers
+## Welcome to Nginx! with Flask API Backend
 
-## Deployed on Railway
-This application runs on Railway with zero local Docker requirements.
+This application demonstrates a multi-container setup with:
+- **Nginx** as the web server (port 80)
+- **Flask API** as the backend service (port 5000)
 
-## Features
-- ✅ Displays "Welcome to Nginx!"
-- ✅ API health checking
-- ✅ Multi-container communication
-- ✅ Auto-deployment from GitHub
+### Features
+✅ Nginx serving "Welcome to Nginx!"  
+✅ Flask API with health check endpoints  
+✅ Supervisor managing both services  
+✅ Real-time API status monitoring  
+✅ Deployed on Railway platform  
 
-## Live Demo
+### Live Demo
 [Your Railway URL will appear here]
+
+### API Endpoints
+- `GET /api/health` - Health check status
+- `GET /api/info` - Detailed API information
+- `GET /` - API information
+
+### Technologies
+- Docker
+- Nginx
+- Python Flask
+- Supervisor
+- Railway Platform
